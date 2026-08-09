@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account - Cloud Access Control</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    #312e81 0%,
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 85% 80%,
+                    #581c87 0%,
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #020617,
+                    #0f172a,
+                    #1e1b4b,
+                    #111827
+                );
+
+            position: relative;
+        }
+
+
+        /* Cryptography grid */
+
+        body::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 100%;
+            height: 100%;
+
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,0.04) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.04) 1px,
+                    transparent 1px
+                );
+
+            background-size: 50px 50px;
+
+            animation: moveGrid 15s linear infinite;
+
+            opacity: 0.5;
+        }
+
+
+        @keyframes moveGrid {
+
+            from {
+                transform: translate(0,0);
+            }
+
+            to {
+                transform: translate(50px,50px);
+            }
+
+        }
+
+
+        /* Floating security circles */
+
+        .circle {
+
+            position: absolute;
+
+            border-radius: 50%;
+
+            filter: blur(2px);
+
+            opacity: 0.25;
+
+            animation: float 8s ease-in-out infinite;
+
+        }
+
+
+        .circle.one {
+
+            width: 180px;
+            height: 180px;
+
+            background: #6366f1;
+
+            top: 8%;
+            left: 8%;
+        }
+
+
+        .circle.two {
+
+            width: 240px;
+            height: 240px;
+
+            background: #a855f7;
+
+            bottom: -50px;
+            right: 5%;
+
+            animation-delay: 2s;
+        }
+
+
+        .circle.three {
+
+            width: 120px;
+            height: 120px;
+
+            background: #06b6d4;
+
+            top: 65%;
+            left: 15%;
+
+            animation-delay: 4s;
+        }
+
+
+        @keyframes float {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-30px);
+            }
+
+        }
+
+
+        /* Main page */
+
+        .page {
+
+            position: relative;
+
+            z-index: 2;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 25px;
+        }
+
+
+        /* Register card */
+
+        .register-card {
+
+            width: 430px;
+
+            max-width: 95%;
+
+            padding: 42px;
+
+            text-align: center;
+
+            border-radius: 22px;
+
+            background:
+                rgba(255,255,255,0.10);
+
+            backdrop-filter: blur(18px);
+
+            -webkit-backdrop-filter: blur(18px);
+
+            border:
+                1px solid rgba(255,255,255,0.20);
+
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.45);
+        }
+
+
+        /* Security icon */
+
+        .security-icon {
+
+            width: 75px;
+            height: 75px;
+
+            margin: 0 auto 20px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 35px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #2563eb
+                );
+
+            box-shadow:
+                0 0 30px rgba(34,197,94,0.45);
+        }
+
+
+        h1 {
+
+            font-size: 30px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .subtitle {
+
+            color: #c4b5fd;
+
+            margin-bottom: 28px;
+
+            font-size: 15px;
+
+            line-height: 1.5;
+        }
+
+
+        /* Error */
+
+        .error {
+
+            background:
+                rgba(239,68,68,0.15);
+
+            border:
+                1px solid rgba(248,113,113,0.4);
+
+            color: #fecaca;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+
+            font-size: 14px;
+        }
+
+
+        /* Success */
+
+        .success {
+
+            background:
+                rgba(34,197,94,0.15);
+
+            border:
+                1px solid rgba(74,222,128,0.4);
+
+            color: #bbf7d0;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+
+            font-size: 14px;
+        }
+
+
+        /* Form */
+
+        .form-group {
+
+            text-align: left;
+
+            margin-bottom: 18px;
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #e5e7eb;
+
+            font-size: 14px;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border-radius: 8px;
+
+            border:
+                1px solid rgba(255,255,255,0.2);
+
+            background:
+                rgba(255,255,255,0.08);
+
+            color: white;
+
+            outline: none;
+
+            font-size: 15px;
+
+            transition: 0.3s;
+        }
+
+
+        input::placeholder {
+
+            color: #94a3b8;
+        }
+
+
+        input:focus {
+
+            border-color: #818cf8;
+
+            box-shadow:
+                0 0 0 3px rgba(129,140,248,0.15);
+        }
+
+
+        /* Register button */
+
+        button {
+
+            width: 100%;
+
+            padding: 14px;
+
+            margin-top: 8px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #2563eb
+                );
+
+            box-shadow:
+                0 8px 25px rgba(37,99,235,0.35);
+
+            transition: 0.3s;
+        }
+
+
+        button:hover {
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 12px 30px rgba(37,99,235,0.5);
+        }
+
+
+        /* Links */
+
+        .links {
+
+            margin-top: 22px;
+
+            font-size: 14px;
+
+            color: #94a3b8;
+        }
+
+
+        .links a {
+
+            color: #a5b4fc;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+
+        .links a:hover {
+
+            color: white;
+
+            text-decoration: underline;
+        }
+
+
+        /* Security information */
+
+        .security-note {
+
+            margin-top: 25px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid rgba(255,255,255,0.1);
+
+            color: #94a3b8;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- Background effects -->
+
+    <div class="circle one"></div>
+
+    <div class="circle two"></div>
+
+    <div class="circle three"></div>
+
+
+    <div class="page">
+
+        <div class="register-card">
+
+
+            <!-- Security icon -->
+
+            <div class="security-icon">
+
+                🔐
+
+            </div>
+
+
+            <h1>
+
+                Create Account
+
+            </h1>
+
+
+            <p class="subtitle">
+
+                Create a secure account to protect
+                and manage your encrypted files.
+
+            </p>
+
+
+            <!-- Error message -->
+
+            <div
+                th:if="${error}"
+                class="error"
+                th:text="${error}">
+
+                Username already exists.
+
+            </div>
+
+
+            <!-- Register form -->
+
+            <form
+                action="/register"
+                method="post">
+
+
+                <div class="form-group">
+
+                    <label for="username">
+
+                        Username
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Choose a username"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+
+                        Password
+
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a secure password"
+                        required>
+
+                </div>
+
+
+                <button type="submit">
+
+                    🛡️ Create Secure Account
+
+                </button>
+
+            </form>
+
+
+            <div class="links">
+
+                Already have an account?
+
+                <a href="/login">
+
+                    Login
+
+                </a>
+
+            </div>
+
+
+            <div class="links">
+
+                <a href="/">
+
+                    ← Back to Home
+
+                </a>
+
+            </div>
+
+
+            <div class="security-note">
+
+                🔒 Your account is protected with
+                role-based access control.
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

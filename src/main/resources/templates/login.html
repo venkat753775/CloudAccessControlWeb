@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Cloud Access Control</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    #312e81 0%,
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 85% 80%,
+                    #581c87 0%,
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #020617,
+                    #0f172a,
+                    #1e1b4b,
+                    #111827
+                );
+
+            position: relative;
+        }
+
+
+        /* Cryptography grid */
+
+        body::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 100%;
+            height: 100%;
+
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,0.04) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.04) 1px,
+                    transparent 1px
+                );
+
+            background-size: 50px 50px;
+
+            animation: moveGrid 15s linear infinite;
+
+            opacity: 0.5;
+        }
+
+
+        @keyframes moveGrid {
+
+            from {
+                transform: translate(0,0);
+            }
+
+            to {
+                transform: translate(50px,50px);
+            }
+
+        }
+
+
+        /* Floating circles */
+
+        .circle {
+
+            position: absolute;
+
+            border-radius: 50%;
+
+            filter: blur(2px);
+
+            opacity: 0.25;
+
+            animation: float 8s ease-in-out infinite;
+
+        }
+
+
+        .circle.one {
+
+            width: 180px;
+            height: 180px;
+
+            background: #6366f1;
+
+            top: 10%;
+            left: 8%;
+        }
+
+
+        .circle.two {
+
+            width: 240px;
+            height: 240px;
+
+            background: #a855f7;
+
+            bottom: -50px;
+            right: 5%;
+
+            animation-delay: 2s;
+        }
+
+
+        .circle.three {
+
+            width: 120px;
+            height: 120px;
+
+            background: #06b6d4;
+
+            top: 65%;
+            left: 15%;
+
+            animation-delay: 4s;
+        }
+
+
+        @keyframes float {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-30px);
+            }
+
+        }
+
+
+        /* Main container */
+
+        .page {
+
+            position: relative;
+
+            z-index: 2;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 25px;
+        }
+
+
+        /* Login card */
+
+        .login-card {
+
+            width: 420px;
+
+            max-width: 95%;
+
+            padding: 45px;
+
+            text-align: center;
+
+            border-radius: 22px;
+
+            background:
+                rgba(255,255,255,0.10);
+
+            backdrop-filter: blur(18px);
+
+            -webkit-backdrop-filter: blur(18px);
+
+            border:
+                1px solid rgba(255,255,255,0.20);
+
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.45);
+        }
+
+
+        /* Lock */
+
+        .security-icon {
+
+            width: 75px;
+            height: 75px;
+
+            margin: 0 auto 20px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 35px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+
+            box-shadow:
+                0 0 30px rgba(99,102,241,0.6);
+        }
+
+
+        h1 {
+
+            font-size: 30px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .subtitle {
+
+            color: #c4b5fd;
+
+            margin-bottom: 30px;
+
+            font-size: 15px;
+        }
+
+
+        /* Error message */
+
+        .error {
+
+            background: rgba(239,68,68,0.15);
+
+            border:
+                1px solid rgba(248,113,113,0.4);
+
+            color: #fecaca;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+
+            font-size: 14px;
+        }
+
+
+        /* Input */
+
+        .form-group {
+
+            text-align: left;
+
+            margin-bottom: 18px;
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #e5e7eb;
+
+            font-size: 14px;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border-radius: 8px;
+
+            border:
+                1px solid rgba(255,255,255,0.2);
+
+            background:
+                rgba(255,255,255,0.08);
+
+            color: white;
+
+            outline: none;
+
+            font-size: 15px;
+
+            transition: 0.3s;
+        }
+
+
+        input::placeholder {
+
+            color: #94a3b8;
+        }
+
+
+        input:focus {
+
+            border-color: #818cf8;
+
+            box-shadow:
+                0 0 0 3px rgba(129,140,248,0.15);
+        }
+
+
+        /* Login button */
+
+        button {
+
+            width: 100%;
+
+            padding: 14px;
+
+            margin-top: 10px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+
+            box-shadow:
+                0 8px 25px rgba(79,70,229,0.35);
+
+            transition: 0.3s;
+        }
+
+
+        button:hover {
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 12px 30px rgba(79,70,229,0.5);
+        }
+
+
+        /* Links */
+
+        .links {
+
+            margin-top: 25px;
+
+            font-size: 14px;
+
+            color: #94a3b8;
+        }
+
+
+        .links a {
+
+            color: #a5b4fc;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+
+        .links a:hover {
+
+            color: white;
+
+            text-decoration: underline;
+        }
+
+
+        .security-note {
+
+            margin-top: 25px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid rgba(255,255,255,0.1);
+
+            color: #94a3b8;
+
+            font-size: 12px;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- Background -->
+
+    <div class="circle one"></div>
+
+    <div class="circle two"></div>
+
+    <div class="circle three"></div>
+
+
+    <!-- Login -->
+
+    <div class="page">
+
+        <div class="login-card">
+
+
+            <div class="security-icon">
+
+                🔐
+
+            </div>
+
+
+            <h1>
+
+                Welcome Back
+
+            </h1>
+
+
+            <p class="subtitle">
+
+                Secure access to your encrypted files
+
+            </p>
+
+
+            <!-- Error -->
+
+            <div
+                th:if="${error}"
+                class="error"
+                th:text="${error}">
+
+                Invalid username or password.
+
+            </div>
+
+
+            <!-- Login Form -->
+
+            <form
+                action="/login"
+                method="post">
+
+
+                <div class="form-group">
+
+                    <label for="username">
+
+                        Username
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter your username"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+
+                        Password
+
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required>
+
+                </div>
+
+
+                <button type="submit">
+
+                    🔓 Secure Login
+
+                </button>
+
+            </form>
+
+
+            <div class="links">
+
+                Don't have an account?
+
+                <a href="/register">
+
+                    Create Account
+
+                </a>
+
+            </div>
+
+
+            <div class="links">
+
+                <a href="/">
+
+                    ← Back to Home
+
+                </a>
+
+            </div>
+
+
+            <div class="security-note">
+
+                🛡️ Protected by role-based access control
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

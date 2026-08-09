@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Decrypt Files - Cloud Access Control</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            color: #e5e7eb;
+
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(79,70,229,0.25),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 80%,
+                    rgba(147,51,234,0.20),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    #020617,
+                    #0f172a,
+                    #111827
+                );
+        }
+
+
+        /* ================= HEADER ================= */
+
+        .header {
+
+            background:
+                rgba(15,23,42,0.92);
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.08);
+
+            padding: 24px 40px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            backdrop-filter: blur(15px);
+        }
+
+
+        .brand h1 {
+
+            margin: 0;
+
+            color: white;
+
+            font-size: 30px;
+        }
+
+
+        .brand p {
+
+            margin: 7px 0 0;
+
+            color: #94a3b8;
+
+            font-size: 14px;
+        }
+
+
+        .dashboard-button {
+
+            text-decoration: none;
+
+            color: white;
+
+            padding: 11px 20px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #4f46e5
+                );
+
+            transition: 0.25s;
+        }
+
+
+        .dashboard-button:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 25px rgba(37,99,235,0.4);
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .container {
+
+            width: 92%;
+
+            max-width: 1150px;
+
+            margin: 45px auto;
+        }
+
+
+        /* ================= CARD ================= */
+
+        .card {
+
+            background:
+                rgba(255,255,255,0.07);
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            backdrop-filter: blur(18px);
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.30);
+        }
+
+
+        /* ================= TITLE ================= */
+
+        .title-section {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 25px;
+
+            gap: 20px;
+        }
+
+
+        .title-left {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+        }
+
+
+        .lock-icon {
+
+            width: 50px;
+
+            height: 50px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 12px;
+
+            font-size: 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #059669
+                );
+
+            box-shadow:
+                0 0 25px rgba(34,197,94,0.25);
+        }
+
+
+        h2 {
+
+            margin: 0;
+
+            color: white;
+
+            font-size: 23px;
+        }
+
+
+        .subtitle {
+
+            margin: 5px 0 0;
+
+            color: #94a3b8;
+
+            font-size: 14px;
+        }
+
+
+        /* ================= SECURITY BADGE ================= */
+
+        .security-badge {
+
+            white-space: nowrap;
+
+            padding: 8px 13px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            color: #86efac;
+
+            background:
+                rgba(34,197,94,0.10);
+
+            border:
+                1px solid rgba(34,197,94,0.25);
+        }
+
+
+        /* ================= TABLE ================= */
+
+        .table-wrapper {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            border-radius: 12px;
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 850px;
+        }
+
+
+        thead {
+
+            background:
+                rgba(30,41,59,0.95);
+        }
+
+
+        th {
+
+            padding: 16px;
+
+            text-align: left;
+
+            color: #a5b4fc;
+
+            font-size: 13px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        td {
+
+            padding: 17px 16px;
+
+            border-top:
+                1px solid rgba(255,255,255,0.07);
+
+            color: #d1d5db;
+
+            font-size: 14px;
+
+            vertical-align: middle;
+        }
+
+
+        tbody tr {
+
+            background:
+                rgba(15,23,42,0.45);
+
+            transition: 0.2s;
+        }
+
+
+        tbody tr:hover {
+
+            background:
+                rgba(99,102,241,0.10);
+        }
+
+
+        /* ================= ORIGINAL FILE ================= */
+
+        .original-file {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            color: white;
+
+            font-weight: bold;
+        }
+
+
+        .file-icon {
+
+            width: 36px;
+
+            height: 36px;
+
+            flex-shrink: 0;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+        }
+
+
+        /* ================= ENCRYPTED FILE ================= */
+
+        .encrypted-file {
+
+            display: inline-block;
+
+            max-width: 330px;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+
+            padding: 8px 11px;
+
+            border-radius: 7px;
+
+            color: #a5b4fc;
+
+            background:
+                rgba(99,102,241,0.10);
+
+            border:
+                1px solid rgba(129,140,248,0.18);
+
+            font-family: monospace;
+
+            font-size: 12px;
+
+            vertical-align: middle;
+        }
+
+
+        /* ================= DECRYPT BUTTON ================= */
+
+        .decrypt-button {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 6px;
+
+            min-width: 145px;
+
+            padding: 10px 16px;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #059669
+                );
+
+            transition: 0.25s;
+
+            box-shadow:
+                0 5px 15px rgba(22,163,74,0.15);
+        }
+
+
+        .decrypt-button:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 22px rgba(22,163,74,0.35);
+        }
+
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+
+            text-align: center;
+
+            padding: 50px;
+
+            color: #64748b;
+        }
+
+
+        .empty-icon {
+
+            font-size: 45px;
+
+            margin-bottom: 12px;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        .footer {
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 12px;
+
+            padding: 25px;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 750px) {
+
+            .header {
+
+                padding: 20px;
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 18px;
+            }
+
+
+            .container {
+
+                width: 95%;
+
+                margin: 25px auto;
+            }
+
+
+            .card {
+
+                padding: 20px;
+            }
+
+
+            .title-section {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="header">
+
+
+    <div class="brand">
+
+        <h1>
+            ☁️ Cloud Access Control
+        </h1>
+
+        <p>
+            Secure File Encryption & Decryption
+        </p>
+
+    </div>
+
+
+    <a
+        href="/dashboard"
+        class="dashboard-button">
+
+        ← Dashboard
+
+    </a>
+
+
+</header>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <div class="card">
+
+
+        <!-- TITLE -->
+
+        <div class="title-section">
+
+
+            <div class="title-left">
+
+
+                <div class="lock-icon">
+
+                    🔓
+
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Decrypt Encrypted Files
+                    </h2>
+
+                    <p class="subtitle">
+
+                        Decrypt your protected files and
+                        download them in their original format.
+
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <span class="security-badge">
+
+                🔒 AES-GCM Protected
+
+            </span>
+
+
+        </div>
+
+
+
+        <!-- TABLE -->
+
+        <div class="table-wrapper">
+
+
+            <table>
+
+
+                <thead>
+
+                <tr>
+
+                    <th>
+                        Original File
+                    </th>
+
+                    <th>
+                        Encrypted File
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                <!-- FILE ROWS -->
+
+                <tr th:each="file : ${files}">
+
+
+                    <!-- Original file -->
+
+                    <td>
+
+                        <div class="original-file">
+
+
+                            <span class="file-icon">
+
+                                📄
+
+                            </span>
+
+
+                            <span
+                                th:text="${file.originalFilename}">
+
+                                sample.pdf
+
+                            </span>
+
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- Encrypted file -->
+
+                    <td>
+
+
+                        <span
+                            class="encrypted-file"
+                            th:text="${file.encryptedFilename}"
+                            th:title="${file.encryptedFilename}">
+
+                            encrypted_file.enc
+
+                        </span>
+
+
+                    </td>
+
+
+                    <!-- Action -->
+
+                    <td>
+
+
+                        <a
+                            th:href="@{/download/{id}(id=${file.id})}"
+                            class="decrypt-button">
+
+                            🔓 Decrypt & Download
+
+                        </a>
+
+
+                    </td>
+
+
+                </tr>
+
+
+                <!-- EMPTY -->
+
+                <tr
+                    th:if="${#lists.isEmpty(files)}">
+
+
+                    <td
+                        colspan="3"
+                        class="empty">
+
+
+                        <div class="empty-icon">
+
+                            🔐
+
+                        </div>
+
+
+                        No encrypted files available.
+
+
+                    </td>
+
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<div class="footer">
+
+    🔐 AES-GCM Encryption
+    &nbsp; • &nbsp;
+    Secure File Decryption
+    &nbsp; • &nbsp;
+    Role-Based Access Control
+
+</div>
+
+
+</body>
+
+</html>

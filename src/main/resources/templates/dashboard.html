@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Cloud Access Control - Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #e5e7eb;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(79,70,229,0.25),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 90% 80%,
+                    rgba(147,51,234,0.20),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    #020617,
+                    #0f172a,
+                    #111827
+                );
+
+            min-height: 100vh;
+        }
+
+
+        /* ================= HEADER ================= */
+
+        .header {
+
+            background:
+                rgba(15,23,42,0.92);
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.08);
+
+            padding: 24px 40px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 10;
+
+            backdrop-filter: blur(15px);
+        }
+
+
+        .brand h1 {
+
+            margin: 0;
+
+            font-size: 30px;
+
+            color: white;
+        }
+
+
+        .brand p {
+
+            margin: 7px 0 0;
+
+            color: #94a3b8;
+
+            font-size: 14px;
+        }
+
+
+        .user-info {
+
+            margin-top: 8px;
+
+            font-size: 14px;
+
+            color: #cbd5e1;
+        }
+
+
+        .user-info strong {
+
+            color: #a5b4fc;
+        }
+
+
+        /* ================= HEADER BUTTONS ================= */
+
+        .header-actions {
+
+            display: flex;
+
+            gap: 10px;
+
+            align-items: center;
+        }
+
+
+        .header-button {
+
+            text-decoration: none;
+
+            color: white;
+
+            padding: 11px 17px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            transition: 0.25s;
+        }
+
+
+        .decrypt-button {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #059669
+                );
+        }
+
+
+        .manage-button {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #9333ea
+                );
+        }
+
+
+        .logout {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #dc2626,
+                    #ef4444
+                );
+        }
+
+
+        .header-button:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.3);
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .container {
+
+            width: 92%;
+
+            max-width: 1200px;
+
+            margin: 40px auto;
+        }
+
+
+        /* ================= CARDS ================= */
+
+        .card {
+
+            background:
+                rgba(255,255,255,0.07);
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            margin-bottom: 30px;
+
+            backdrop-filter: blur(18px);
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.30);
+        }
+
+
+        .card h2 {
+
+            margin-top: 0;
+
+            color: white;
+
+            font-size: 22px;
+        }
+
+
+        .description {
+
+            color: #94a3b8;
+
+            margin-bottom: 25px;
+
+            line-height: 1.6;
+        }
+
+
+        /* ================= UPLOAD ================= */
+
+        .upload-area {
+
+            border:
+                2px dashed rgba(129,140,248,0.5);
+
+            border-radius: 14px;
+
+            padding: 30px;
+
+            text-align: center;
+
+            background:
+                rgba(99,102,241,0.06);
+
+            transition: 0.3s;
+        }
+
+
+        .upload-area:hover {
+
+            border-color: #818cf8;
+
+            background:
+                rgba(99,102,241,0.12);
+        }
+
+
+        .upload-icon {
+
+            font-size: 45px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .upload-area p {
+
+            color: #94a3b8;
+
+            margin-bottom: 20px;
+        }
+
+
+        .upload-form {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+        }
+
+
+        input[type="file"] {
+
+            color: #cbd5e1;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            border:
+                1px solid rgba(255,255,255,0.15);
+
+            background:
+                rgba(255,255,255,0.06);
+        }
+
+
+        .upload-button {
+
+            border: none;
+
+            padding: 12px 22px;
+
+            border-radius: 8px;
+
+            color: white;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #4f46e5
+                );
+
+            transition: 0.25s;
+        }
+
+
+        .upload-button:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 25px rgba(37,99,235,0.4);
+        }
+
+
+        /* ================= ERROR ================= */
+
+        .error {
+
+            background:
+                rgba(239,68,68,0.12);
+
+            border:
+                1px solid rgba(248,113,113,0.35);
+
+            color: #fecaca;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* ================= FILE HEADER ================= */
+
+        .files-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+
+        .files-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .files-title h2 {
+
+            margin: 0;
+        }
+
+
+        .security-badge {
+
+            background:
+                rgba(34,197,94,0.12);
+
+            color: #86efac;
+
+            border:
+                1px solid rgba(34,197,94,0.25);
+
+            padding: 7px 12px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+
+        /* ================= TABLE ================= */
+
+        .table-wrapper {
+
+            overflow-x: auto;
+
+            border-radius: 12px;
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 900px;
+        }
+
+
+        thead {
+
+            background:
+                rgba(30,41,59,0.95);
+        }
+
+
+        th {
+
+            padding: 16px;
+
+            text-align: left;
+
+            color: #a5b4fc;
+
+            font-size: 13px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        td {
+
+            padding: 16px;
+
+            border-top:
+                1px solid rgba(255,255,255,0.07);
+
+            color: #d1d5db;
+
+            font-size: 14px;
+        }
+
+
+        tbody tr {
+
+            background:
+                rgba(15,23,42,0.45);
+
+            transition: 0.2s;
+        }
+
+
+        tbody tr:hover {
+
+            background:
+                rgba(99,102,241,0.10);
+        }
+
+
+        /* ================= FILE ICON ================= */
+
+        .file-name {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            font-weight: bold;
+
+            color: white;
+        }
+
+
+        .file-icon {
+
+            width: 36px;
+
+            height: 36px;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+
+            font-size: 18px;
+        }
+
+
+        /* ================= ENCRYPTED FILE ================= */
+
+        .encrypted-name {
+
+            display: inline-block;
+
+            max-width: 280px;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            white-space: nowrap;
+
+            color: #a5b4fc;
+
+            background:
+                rgba(99,102,241,0.10);
+
+            border:
+                1px solid rgba(129,140,248,0.18);
+
+            padding: 7px 10px;
+
+            border-radius: 6px;
+
+            font-family: monospace;
+
+            font-size: 12px;
+        }
+
+
+        /* ================= USER ================= */
+
+        .username {
+
+            color: #c4b5fd;
+
+            font-weight: bold;
+        }
+
+
+        /* ================= DATE ================= */
+
+        .date {
+
+            color: #94a3b8;
+
+            font-size: 13px;
+        }
+
+
+        /* ================= DECRYPT ================= */
+
+        .decrypt {
+
+            display: inline-block;
+
+            text-decoration: none;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #059669
+                );
+
+            padding: 9px 15px;
+
+            border-radius: 7px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            transition: 0.25s;
+        }
+
+
+        .decrypt:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 7px 18px rgba(22,163,74,0.35);
+        }
+
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+
+            text-align: center;
+
+            padding: 45px;
+
+            color: #64748b;
+        }
+
+
+        .empty-icon {
+
+            font-size: 45px;
+
+            margin-bottom: 10px;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        .security-footer {
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 12px;
+
+            padding: 20px;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 750px) {
+
+            .header {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 20px;
+
+                padding: 20px;
+            }
+
+
+            .header-actions {
+
+                flex-wrap: wrap;
+            }
+
+
+            .container {
+
+                width: 95%;
+
+                margin: 25px auto;
+            }
+
+
+            .card {
+
+                padding: 20px;
+            }
+
+
+            .upload-area {
+
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="header">
+
+
+    <div class="brand">
+
+        <h1>☁️ Cloud Access Control</h1>
+
+        <p>
+            Secure File Encryption & Role-Based Access Management
+        </p>
+
+        <div class="user-info">
+
+            Logged in as:
+
+            <strong th:text="${session.username}">
+                username
+            </strong>
+
+            &nbsp; | &nbsp;
+
+            Role:
+
+            <strong th:text="${session.role}">
+                USER
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+
+        <!-- Decrypt page -->
+
+        <a
+            href="/decrypt"
+            class="header-button decrypt-button">
+
+            🔓 Decrypt Files
+
+        </a>
+
+
+        <!-- Admin -->
+
+        <a
+            th:if="${session.role == 'ADMIN'}"
+            href="/admin/users"
+            class="header-button manage-button">
+
+            👥 Manage Users
+
+        </a>
+
+
+        <!-- Logout -->
+
+        <a
+            href="/logout"
+            class="header-button logout">
+
+            Logout
+
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<div class="container">
+
+
+    <!-- ================= UPLOAD ================= -->
+
+    <div class="card">
+
+
+        <h2>
+            🔐 Upload & Encrypt File
+        </h2>
+
+
+        <p class="description">
+
+            Protect your files using
+            <strong>AES-GCM encryption</strong>.
+            Files are encrypted before being stored
+            on the server.
+
+        </p>
+
+
+        <div
+            th:if="${param.error}"
+            class="error"
+            th:text="${param.error}">
+        </div>
+
+
+        <div class="upload-area">
+
+
+            <div class="upload-icon">
+
+                📁
+
+            </div>
+
+
+            <p>
+
+                Select a file to securely encrypt
+
+            </p>
+
+
+            <form
+                action="/upload"
+                method="post"
+                enctype="multipart/form-data"
+                class="upload-form">
+
+
+                <input
+                    type="file"
+                    name="file"
+                    required>
+
+
+                <button
+                    type="submit"
+                    class="upload-button">
+
+                    🔐 Upload & Encrypt
+
+                </button>
+
+
+            </form>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= FILES ================= -->
+
+    <div class="card">
+
+
+        <div class="files-header">
+
+
+            <div class="files-title">
+
+                <span style="font-size:28px;">
+                    🗂️
+                </span>
+
+                <h2>
+                    Encrypted Files
+                </h2>
+
+            </div>
+
+
+            <span class="security-badge">
+
+                🔒 AES-GCM Protected
+
+            </span>
+
+
+        </div>
+
+
+
+        <div class="table-wrapper">
+
+
+            <table>
+
+
+                <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>User</th>
+
+                    <th>Original File</th>
+
+                    <th>Encrypted File</th>
+
+                    <th>Upload Time</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                <tr th:each="file : ${files}">
+
+
+                    <td th:text="${file.id}">
+                        1
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="username"
+                            th:text="${file.username}">
+
+                            user
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="file-name">
+
+                            <span class="file-icon">
+                                📄
+                            </span>
+
+                            <span
+                                th:text="${file.originalFilename}">
+
+                                sample.pdf
+
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="encrypted-name"
+                            th:text="${file.encryptedFilename}"
+                            th:title="${file.encryptedFilename}">
+
+                            encrypted_file.enc
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="date"
+                            th:text="${file.uploadTime}">
+
+                            2026-08-10
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <a
+                            th:href="@{/download/{id}(id=${file.id})}"
+                            class="decrypt">
+
+                            🔓 Decrypt
+
+                        </a>
+
+                    </td>
+
+
+                </tr>
+
+
+                <tr
+                    th:if="${#lists.isEmpty(files)}">
+
+                    <td
+                        colspan="6"
+                        class="empty">
+
+                        <div class="empty-icon">
+                            🔐
+                        </div>
+
+                        No encrypted files available.
+
+                    </td>
+
+                </tr>
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<div class="security-footer">
+
+    🔒 Cloud Access Control &nbsp; • &nbsp;
+    AES-GCM Encryption &nbsp; • &nbsp;
+    Role-Based Access Control
+
+</div>
+
+
+</body>
+
+</html>
